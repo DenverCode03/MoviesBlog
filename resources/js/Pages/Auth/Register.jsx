@@ -3,7 +3,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset, progress } = useForm({
@@ -16,6 +16,8 @@ export default function Register() {
         password_confirmation: '',
     });
 
+    const {auth} = usePage().props
+
     const submit = (e) => {
         e.preventDefault();
 
@@ -26,9 +28,27 @@ export default function Register() {
 
     return (
         <GuestLayout>
-            <Head title="Register" />
+            {auth.user ? 
+            <Head title="Create user" /> :
+            <Head title="Register" />}
+
+            {auth.user? 
+                <h2 className='text-center text-gray-200 text-2xl font-extrabold'>Create a New user</h2>:
+                <h2 className='text-center text-gray-200 text-2xl font-extrabold'>Register</h2>
+            }
 
             <form onSubmit={submit}>
+                <div>
+                    
+                    {auth.user? 
+                        <select name="role" id="role" className='rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600 '>
+                            <option value="author">Author</option>
+                            <option value="admin">Admin</option>
+                        </select>:
+                        null
+                    }
+
+                </div>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -72,7 +92,6 @@ export default function Register() {
                         value={data.phone}
                         className="mt-1 block w-full"
                         autoComplete="phone"
-                        isFocused={true}
                         onChange={(e) => setData('phone', e.target.value)}
                         required
                     />
@@ -89,7 +108,6 @@ export default function Register() {
                         value={data.address}
                         className="mt-1 block w-full"
                         autoComplete="address"
-                        isFocused={true}
                         onChange={(e) => setData('address', e.target.value)}
                         required
                     />
@@ -100,7 +118,7 @@ export default function Register() {
                 <div>
                     <InputLabel htmlFor="image" value="Image" />
 
-                    <input
+                    <input 
                         id="image"
                         name="image"
                         type="file"

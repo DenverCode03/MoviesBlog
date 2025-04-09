@@ -48,4 +48,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function reservation () {
+        return $this->belongsToMany(Film::class, 'reservations');
+    }
+
+    public function react () {
+        return $this->belongsToMany(Film::class, 'film_users');
+    }
+
+
 }
