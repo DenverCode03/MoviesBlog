@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->middleware([$admin, 'auth'])->controller(AdminController::class)->name('admin.')->group(function() {
     Route::get('dashboard', 'dashboard')->name('dashboard');
     Route::get('user', 'user')->name('user');
+    Route::get('show_user-{id}', 'show_user')->name('show_user');
+    Route::get('register_user', 'registerUser')->name('register_user');
 });
 
 require __DIR__.'/auth.php';

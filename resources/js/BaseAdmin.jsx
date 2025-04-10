@@ -1,4 +1,5 @@
 import { usePage, router, Link } from "@inertiajs/react";
+import { House, User } from "lucide-react";
 
 
 export default function BaseAdmin ({children}) {
@@ -58,11 +59,11 @@ function Sidbar () {
             <div className="w-full mt-6 px-3">
 
                 <div className="w-full">
-                    <Link href={route('admin.dashboard')} className="text-gray-700 block px-2 w-full hover:text-red-500 py-1 hover:bg-red-200 rounded-xl font-bold">Dashboard</Link>
+                    <Link href={route('admin.dashboard')} className="text-gray-700 block px-2 w-full hover:text-red-500 py-1 hover:bg-red-200 rounded-xl font-bold"><House size={16} className="inline mr-1 -top-[2px] relative"  strokeWidth={2.5} />Dashboard</Link>
                 </div>
 
                 <div className="w-full">
-                    <Link href={route('admin.user')} className="text-gray-700 block hover:text-red-500 px-2 w-full py-1 hover:bg-red-200 rounded-xl font-bold">User</Link>
+                    <Link href={route('admin.user')} className="text-gray-700 block hover:text-red-500 px-2 w-full py-1 hover:bg-red-200 rounded-xl font-bold"><User size={16} className="inline mr-1 -top-[2px] relative"  strokeWidth={2.5} />User</Link>
                 </div>
 
             </div>

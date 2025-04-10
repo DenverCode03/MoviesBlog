@@ -13,7 +13,13 @@ class AdminController extends Controller
     }
 
     public function user () {
-        $user = User::orderBy('created_at', 'desc')->get();
-        return Inertia::render('admin/User');
+        $user = User::orderBy('created_at', 'desc')->with('reservation')->get();
+        return Inertia::render('admin/User', [
+            'user' => $user
+        ]);
+    }
+
+    public function registerUser () {
+        return Inertia::render('admin/RegisterUser');
     }
 }
