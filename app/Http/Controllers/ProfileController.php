@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -43,21 +45,36 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, User $id): RedirectResponse
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
+        // $request->validate([
+        //     'password' => ['required', 'current_password'],
+        // ]);
+        
+        return Redirect::back()->with('success', 'Account deleted successfully.');
 
-        $user = $request->user();
+        $user = $id;
+        // dd($user);
 
-        Auth::logout();
+        if (Auth::user()->role === 'user') {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        // dd(Storage::disk('public')->exists($user->image));
+
+        if ($user->image && Storage::disk('public')->exists($user->image)) {
+            Storage::delete($user->image);
+        }
+
 
         $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if (Auth::user()->role === 'user') {
+            return Redirect::to('welcome')->with('success', 'Account deleted successfully.');
+        }
 
-        return Redirect::to('/');
+        return Redirect::back()->with('success', 'Account deleted successfully.');
     }
 }

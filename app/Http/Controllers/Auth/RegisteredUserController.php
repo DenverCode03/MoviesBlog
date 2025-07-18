@@ -30,6 +30,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // dd($request->all());
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -39,13 +40,16 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // dd($request->all());
+
+        // 
+        // dd($request->role);
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time().'.'.$image->getClientOriginalName();
             $image = $image->storeAs('images', $imageName, 'public');
-            $image = '/storage/'.$image;
+
+    
         }
 
         try {
@@ -55,17 +59,22 @@ class RegisteredUserController extends Controller
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'role' => $request->role ?? 'user',
-                'image' => $image,
+                'image' => $image ?? null,
                 'password' => Hash::make($request->password),
             ]);
         } catch (\Exception $e) {
-            dd($request->all());
+            dd($e->getMessage());
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
 
         event(new Registered($user));
 
-        Auth::login($user);
+        if (Auth::user()){
+            return redirect()->route('admin.user')->with('success', 'tout est ok');
+        }else{
+            Auth::login($user);
+        }
+
 
         return redirect(route('dashboard', absolute: false))->with('success', 'tout est ok');
     }
