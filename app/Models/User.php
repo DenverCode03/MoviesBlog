@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -18,13 +17,11 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'phone',
+        'nom',
+        'identifiant',
         'role',
-        'address',
-        'image',
+        'password',
+        'email_verified_at',
     ];
 
     /**
@@ -50,13 +47,27 @@ class User extends Authenticatable
         ];
     }
 
-    public function reservation () {
-        return $this->belongsToMany(Film::class, 'reservations');
+    /**
+     * Requêtes soumises par l'utilisateur (en tant qu'étudiant)
+     */
+    public function requetesEtudiant(): HasMany
+    {
+        return $this->hasMany(Requete::class, 'etudiant_id');
     }
 
-    public function react () {
-        return $this->belongsToMany(Film::class, 'film_users');
+    /**
+     * Requêtes traitées par l'utilisateur (en tant que secrétaire)
+     */
+    public function requetesSecretaire(): HasMany
+    {
+        return $this->hasMany(Requete::class, 'secretaire_id');
     }
 
-
+    /**
+     * Requêtes validées par l'utilisateur (en tant que directeur)
+     */
+    public function requetesDirecteur(): HasMany
+    {
+        return $this->hasMany(Requete::class, 'directeur_id');
+    }
 }

@@ -13,6 +13,8 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log(data);
+        
 
         post(route("login"), {
             onFinish: () => reset("password"),
@@ -122,7 +124,7 @@ export default function Login({ status, canResetPassword }) {
                                         }
                                     />
                                 </div>
-                                {errors.email && (
+                                {errors.identifiant && (
                                     <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <svg
                                             className="w-4 h-4 mr-1"
@@ -137,7 +139,7 @@ export default function Login({ status, canResetPassword }) {
                                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                             />
                                         </svg>
-                                        {errors.email}
+                                        {errors.identifiant}
                                     </p>
                                 )}
                             </div>

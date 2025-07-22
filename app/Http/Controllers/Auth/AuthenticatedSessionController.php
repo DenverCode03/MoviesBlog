@@ -30,22 +30,23 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-
+        // dd('yod');
         $request->session()->regenerate();
         // Define role-based redirects
         $roleRedirects = [
-            'superAdmin' => 'admin.dashboard',
+            'superAdmin' => 'superadmin.dashboard',
             'admin' => 'admin.dashboard',
+            'etudiant' => 'etudiant.dashboard',
             // Add other roles as needed
         ];
 
         // Check user role and redirect accordingly
         foreach ($roleRedirects as $role => $route) {
             if (Auth::user()->role === $role) {
+                // dd('conect');
                 return redirect()->intended(route($route, absolute: false));
             }
         }
-            
     }
 
     /**
