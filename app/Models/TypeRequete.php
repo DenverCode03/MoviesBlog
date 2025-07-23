@@ -19,6 +19,7 @@ class TypeRequete extends Model
         'description',
         'delai_traitement_jours',
         'est_actif',
+        'organisme_responsable_id',
     ];
 
     protected $casts = [
@@ -35,5 +36,10 @@ class TypeRequete extends Model
     {
         return $this->belongsToMany(Document::class, 'document_type_requete', 'type_requete_id', 'document_id')
                     ->withTimestamps();
+    }
+
+    public function organismeResponsable()
+    {
+        return $this->belongsTo(User::class, 'organisme_responsable_id');
     }
 }

@@ -19,17 +19,24 @@ class Requete extends Model
         'priorite',
         'date_limite',
         'date_traitement',
+        'date_approbation',
         'motif_rejet',
+        'motif_rejet_directeur',
         'commentaire_secretaire',
+        'commentaire_directeur',
         'etudiant_id',
         'type_requete_id',
         'secretaire_id',
         'directeur_id',
+        'organisme_responsable_id',
+        'date_envoi_organisme',
     ];
 
     protected $casts = [
         'date_limite' => 'datetime',
         'date_traitement' => 'datetime',
+        'date_approbation' => 'datetime',
+        'date_envoi_organisme' => 'datetime',
     ];
 
     public function etudiant(): BelongsTo
@@ -55,5 +62,10 @@ class Requete extends Model
     public function requeteDocuments(): HasMany
     {
         return $this->hasMany(RequeteDocument::class, 'requete_id');
+    }
+
+    public function organismeResponsable(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'organisme_responsable_id');
     }
 }

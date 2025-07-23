@@ -70,4 +70,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Requete::class, 'directeur_id');
     }
+
+    /**
+     * Types de requêtes dont l'utilisateur est l'organisme responsable
+     */
+    public function typesRequetesResponsable(): HasMany
+    {
+        return $this->hasMany(TypeRequete::class, 'organisme_responsable_id');
+    }
+
+    /**
+     * Documents validés par l'utilisateur (en tant que secrétaire)
+     */
+    public function documentsValides(): HasMany
+    {
+        return $this->hasMany(RequeteDocument::class, 'validateur_id');
+    }
 }

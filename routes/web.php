@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DirecteurController;
 use App\Http\Controllers\EtudiantController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ScolariteController;
+use App\Http\Controllers\SecretaireController;
 use App\Http\Controllers\SuperAdminController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -31,20 +34,20 @@ require __DIR__ . '/auth.php';
 Route::middleware('role.superAdmin')->name('superadmin.')->group(function () {
     // Route::get('/admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin/requetes', [SuperAdminController::class, 'requetes'])->name('requetes');
-    
+
     // Routes pour la gestion des types de requêtes
     Route::post('/admin/type-requetes', [SuperAdminController::class, 'storeTypeRequete'])->name('type-requetes.store');
     Route::put('/admin/type-requetes/{typeRequete}', [SuperAdminController::class, 'updateTypeRequete'])->name('type-requetes.update');
     Route::delete('/admin/type-requetes/{typeRequete}', [SuperAdminController::class, 'destroyTypeRequete'])->name('type-requetes.destroy');
     Route::patch('/admin/type-requetes/{typeRequete}/toggle-status', [SuperAdminController::class, 'toggleTypeRequeteStatus'])->name('type-requetes.toggle-status');
-    
+
     // Routes pour la gestion des utilisateurs
     Route::get('/admin/users', [SuperAdminController::class, 'users'])->name('users');
     Route::post('/admin/users', [SuperAdminController::class, 'storeUser'])->name('users.store');
     Route::put('/admin/users/{user}', [SuperAdminController::class, 'updateUser'])->name('users.update');
     Route::delete('/admin/users/{user}', [SuperAdminController::class, 'destroyUser'])->name('users.destroy');
     Route::patch('/admin/users/{user}/reset-password', [SuperAdminController::class, 'resetUserPassword'])->name('users.reset-password');
-    
+
     // Routes pour la gestion des documents
     Route::get('/admin/documents', [SuperAdminController::class, 'documents'])->name('documents');
     Route::post('/admin/documents', [SuperAdminController::class, 'storeDocument'])->name('documents.store');
@@ -63,23 +66,30 @@ Route::middleware('role.etudiant')->prefix('etudiant')->name('etudiant.')->group
     Route::get('/documents/{requeteDocument}/download', [EtudiantController::class, 'downloadDocument'])->name('documents.download');
 });
 
-// Route::middleware('role.secretaire')->group(function () {
-//     Route::get('/requetes/traitement', [RequeteController::class, 'traitement']);
-//     Route::patch('/requetes/{id}/statut', [RequeteController::class, 'updateStatut']);
-// });
+Route::middleware('role.secretaire')->prefix('secretaire')->name('secretaire.')->group(function () {
+    Route::get('/traitement', [SecretaireController::class, 'traitement'])->name('traitement');
+    Route::get('/historique', [SecretaireController::class, 'historique'])->name('historique');
+    Route::get('/requetes/{requete}', [SecretaireController::class, 'show'])->name('requetes.show');
+    Route::patch('/requetes/{requete}/prendre', [SecretaireController::class, 'prendre'])->name('requetes.prendre');
+    Route::patch('/requetes/{requete}/valider', [SecretaireController::class, 'valider'])->name('requetes.valider');
+    Route::patch('/requetes/{requete}/rejeter', [SecretaireController::class, 'rejeter'])->name('requetes.rejeter');
+    Route::patch('/requetes/{requete}/finaliser', [SecretaireController::class, 'finaliser'])->name('requetes.finaliser');
+    Route::post('/requetes/{requete}/validate-documents', [SecretaireController::class, 'validateDocuments'])->name('requetes.validate-documents');
+    Route::get('/documents/{requeteDocument}/download', [SecretaireController::class, 'downloadDocument'])->name('documents.download');
+    Route::get('/documents/{requeteDocument}/preview', [SecretaireController::class, 'previewDocument'])->name('documents.preview');
+});
 
-// // Routes pour le personnel
-// Route::middleware('role.staff')->group(function () {
-//     Route::get('/dashboard/staff', [DashboardController::class, 'staff']);
-// });
+Route::middleware('role.directeur')->prefix('directeur')->name('directeur.')->group(function () {
+    Route::get('/approbations', [DirecteurController::class, 'approbations'])->name('approbations');
+    Route::get('/historique', [DirecteurController::class, 'historique'])->name('historique');
+    Route::get('/requetes/{requete}', [DirecteurController::class, 'show'])->name('requetes.show');
+    Route::patch('/requetes/{requete}/approuver', [DirecteurController::class, 'approuver'])->name('requetes.approuver');
+    Route::patch('/requetes/{requete}/rejeter', [DirecteurController::class, 'rejeter'])->name('requetes.rejeter');
+    Route::get('/documents/{requeteDocument}/download', [DirecteurController::class, 'downloadDocument'])->name('documents.download');
+    Route::get('/documents/{requeteDocument}/preview', [DirecteurController::class, 'previewDocument'])->name('documents.preview');
+});
 
-// // Routes pour les administrateurs
-// Route::middleware('role.admin')->group(function () {
-//     Route::get('/admin/reports', [ReportController::class, 'index']);
-//     Route::get('/admin/users', [UserController::class, 'index']);
-// });
 
-// // Middleware flexible
-// Route::middleware('role:directeur,scolarite')->group(function () {
-//     Route::get('/validation/requetes', [ValidationController::class, 'index']);
-// });
+Route::middleware('role.scolarite')->prefix('scolarite')->name('scolarite.')->group(function () {
+    Route::get('/approbations', [ScolariteController::class, 'approbations'])->name('approbations');
+});

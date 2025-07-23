@@ -105,7 +105,7 @@ class DashboardController extends Controller
             'en_cours' => Requete::where('statut', 'en_cours')->count(),
             'a_valider' => Requete::where('statut', 'validee')->count(),
             'terminees_aujourd_hui' => Requete::where('statut', 'terminee')
-                ->whereDate('date_traitement', Carbon::today())
+                ->whereRaw("date(date_traitement) = ?", [Carbon::today()->format('Y-m-d')])
                 ->count(),
         ];
 
@@ -113,7 +113,7 @@ class DashboardController extends Controller
         $requetesPrioritaires = Requete::whereIn('statut', ['en_attente', 'en_cours'])
             ->whereIn('priorite', ['haute', 'urgente'])
             ->with(['etudiant', 'typeRequete'])
-            ->orderByRaw("FIELD(priorite, 'urgente', 'haute', 'normale', 'basse')")
+            ->orderByRaw("CASE priorite WHEN 'urgente' THEN 1 WHEN 'haute' THEN 2 WHEN 'normale' THEN 3 WHEN 'basse' THEN 4 ELSE 5 END")
             ->orderBy('created_at', 'asc')
             ->limit(5)
             ->get();
@@ -136,10 +136,13 @@ class DashboardController extends Controller
                 $q->where('statut', 'en_cours');
             }
         ])
-        ->having('total_requetes', '>', 0)
-        ->orderBy('total_requetes', 'desc')
-        ->limit(5)
-        ->get();
+        ->get()
+        ->filter(function($type) {
+            return $type->total_requetes > 0;
+        })
+        ->sortByDesc('total_requetes')
+        ->take(5)
+        ->values();
 
         return [
             'userRole' => $user->role,
@@ -158,7 +161,8 @@ class DashboardController extends Controller
             'en_attente_validation' => Requete::where('statut', 'validee')->count(),
             'validees_ce_mois' => Requete::where('directeur_id', $user->id)
                 ->where('statut', 'terminee')
-                ->whereMonth('date_traitement', Carbon::now()->month)
+                ->whereNotNull('date_traitement')
+                ->whereRaw("strftime('%m', date_traitement) = ?", [sprintf('%02d', Carbon::now()->month)])
                 ->count(),
             'taux_rejet' => $this->calculateRejectionRate(),
         ];
@@ -175,21 +179,25 @@ class DashboardController extends Controller
             ->withCount([
                 'requetesSecretaire as total_traitees',
                 'requetesSecretaire as ce_mois' => function($q) {
-                    $q->whereMonth('date_traitement', Carbon::now()->month);
+                    $q->whereNotNull('date_traitement')
+                     ->whereRaw("strftime('%m', date_traitement) = ?", [sprintf('%02d', Carbon::now()->month)]);
                 }
             ])
-            ->having('total_traitees', '>', 0)
-            ->orderBy('ce_mois', 'desc')
-            ->limit(5)
-            ->get();
+            ->get()
+            ->filter(function($user) {
+                return $user->total_traitees > 0;
+            })
+            ->sortByDesc('ce_mois')
+            ->take(5)
+            ->values();
 
-        // Évolution mensuelle
+        // Évolution mensuelle - Compatible SQLite et MySQL
         $evolutionMensuelle = Requete::select(
-                DB::raw('MONTH(created_at) as mois'),
+                DB::raw("CAST(strftime('%m', created_at) AS INTEGER) as mois"),
                 DB::raw('COUNT(*) as total'),
                 DB::raw('SUM(CASE WHEN statut = "terminee" THEN 1 ELSE 0 END) as terminees')
             )
-            ->whereYear('created_at', Carbon::now()->year)
+            ->whereRaw("strftime('%Y', created_at) = ?", [Carbon::now()->year])
             ->groupBy('mois')
             ->orderBy('mois')
             ->get();
@@ -211,7 +219,7 @@ class DashboardController extends Controller
             'total_requetes' => Requete::count(),
             'total_types' => TypeRequete::count(),
             'total_documents' => Document::count(),
-            'requetes_ce_mois' => Requete::whereMonth('created_at', Carbon::now()->month)->count(),
+            'requetes_ce_mois' => Requete::whereRaw("strftime('%m', created_at) = ?", [sprintf('%02d', Carbon::now()->month)])->count(),
             'utilisateurs_actifs' => User::whereNotNull('email_verified_at')->count(),
         ];
 
@@ -276,8 +284,8 @@ class DashboardController extends Controller
             $date = Carbon::now()->subDays($i);
             $performanceSysteme[] = [
                 'date' => $date->format('Y-m-d'),
-                'requetes' => Requete::whereDate('created_at', $date)->count(),
-                'utilisateurs' => User::whereDate('created_at', $date)->count(),
+                'requetes' => Requete::whereRaw("date(created_at) = ?", [$date->format('Y-m-d')])->count(),
+                'utilisateurs' => User::whereRaw("date(created_at) = ?", [$date->format('Y-m-d')])->count(),
             ];
         }
 
