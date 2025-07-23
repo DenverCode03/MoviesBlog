@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
         foreach ($roleRedirects as $role => $route) {
             if (Auth::user()->role === $role) {
                 // dd('conect');
-                return redirect()->intended(route($route, absolute: false));
+                return redirect()->intended(route('dashboard', absolute: false));
             }
         }
     }

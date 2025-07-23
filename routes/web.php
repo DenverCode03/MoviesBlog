@@ -29,7 +29,7 @@ require __DIR__ . '/auth.php';
 
 // Routes spécifiques par rôle
 Route::middleware('role.superAdmin')->name('superadmin.')->group(function () {
-    Route::get('/admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin/requetes', [SuperAdminController::class, 'requetes'])->name('requetes');
     
     // Routes pour la gestion des types de requêtes
@@ -54,9 +54,13 @@ Route::middleware('role.superAdmin')->name('superadmin.')->group(function () {
 });
 
 Route::middleware('role.etudiant')->prefix('etudiant')->name('etudiant.')->group(function () {
-    Route::get('/dashboard', [EtudiantController::class, 'dashboard'])->name('dashboard');
-    Route::get('/mes-requetes', [EtudiantController::class, 'mesRequetes']);
-    Route::post('/requetes', [EtudiantController::class, 'store']);
+    Route::get('/mes-requetes', [EtudiantController::class, 'mesRequetes'])->name('mes-requetes');
+    Route::get('/requetes/create', [EtudiantController::class, 'create'])->name('requetes.create');
+    Route::post('/requetes', [EtudiantController::class, 'store'])->name('requetes.store');
+    Route::get('/requetes/{requete}', [EtudiantController::class, 'show'])->name('requetes.show');
+    Route::patch('/requetes/{requete}/recuperer', [EtudiantController::class, 'markAsRecupere'])->name('requetes.recuperer');
+    Route::delete('/requetes/{requete}', [EtudiantController::class, 'cancel'])->name('requetes.cancel');
+    Route::get('/documents/{requeteDocument}/download', [EtudiantController::class, 'downloadDocument'])->name('documents.download');
 });
 
 // Route::middleware('role.secretaire')->group(function () {
