@@ -3,10 +3,12 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DirecteurController;
 use App\Http\Controllers\EtudiantController;
+use App\Http\Controllers\OrganismeTraitementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScolariteController;
 use App\Http\Controllers\SecretaireController;
 use App\Http\Controllers\SuperAdminController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -87,6 +89,19 @@ Route::middleware('role.directeur')->prefix('directeur')->name('directeur.')->gr
     Route::patch('/requetes/{requete}/rejeter', [DirecteurController::class, 'rejeter'])->name('requetes.rejeter');
     Route::get('/documents/{requeteDocument}/download', [DirecteurController::class, 'downloadDocument'])->name('documents.download');
     Route::get('/documents/{requeteDocument}/preview', [DirecteurController::class, 'previewDocument'])->name('documents.preview');
+});
+
+Route::middleware(['auth', 'role.organisme'])->prefix('orgtraitement')->name('orgtraitement.')->group(function () {
+    Route::get('/traitement', [OrganismeTraitementController::class, 'traitement'])->name('traitement');
+    Route::get('/historique', [OrganismeTraitementController::class, 'historique'])->name('historique');
+    Route::get('/requetes/{requete}', [OrganismeTraitementController::class, 'show'])->name('requetes.show');
+    Route::patch('/requetes/{requete}/prendre', [OrganismeTraitementController::class, 'prendre'])->name('requetes.prendre');
+    Route::patch('/requetes/{requete}/traiter', [OrganismeTraitementController::class, 'traiter'])->name('requetes.traiter');
+    Route::patch('/requetes/{requete}/rejeter', [OrganismeTraitementController::class, 'rejeter'])->name('requetes.rejeter');
+    Route::patch('/requetes/{requete}/finaliser', [OrganismeTraitementController::class, 'finaliser'])->name('requetes.finaliser');
+    Route::get('/documents/{requeteDocument}/download', [OrganismeTraitementController::class, 'downloadDocument'])->name('documents.download');
+    Route::get('/documents/{requeteDocument}/preview', [OrganismeTraitementController::class, 'previewDocument'])->name('documents.preview');
+    Route::get('/requetes/{requete}/resultat/download', [OrganismeTraitementController::class, 'downloadResultat'])->name('requetes.resultat.download');
 });
 
 

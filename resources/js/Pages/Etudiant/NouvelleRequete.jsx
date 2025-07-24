@@ -8,7 +8,7 @@ export default function NouvelleRequete() {
     const [formData, setFormData] = useState({
         type_requete_id: '',
         priorite: 'normale',
-        commentaire: '',
+        commentaire: 'aucun',
         documents: {}
     });
     const [uploadedFiles, setUploadedFiles] = useState({});
@@ -179,14 +179,14 @@ export default function NouvelleRequete() {
                 {selectedType && (
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Informations de la requête */}
-                        <div className="bg-white border border-gray-200 rounded-xl p-6">
+                        {/* <div className="bg-white border border-gray-200 rounded-xl p-6">
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
                                 2. Informations de la requête
                             </h2>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
                                 {/* Priorité */}
-                                <div>
+                                {/* <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                                         Priorité
                                     </label>
@@ -200,10 +200,10 @@ export default function NouvelleRequete() {
                                         <option value="haute">Haute</option>
                                         <option value="urgente">Urgente</option>
                                     </select>
-                                </div>
+                                </div> */}
 
                                 {/* Date limite estimée */}
-                                <div>
+                                {/* <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                                         Date limite estimée
                                     </label>
@@ -211,10 +211,10 @@ export default function NouvelleRequete() {
                                         {new Date(Date.now() + selectedType.delai_traitement_jours * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR')}
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Commentaire */}
-                            <div className="mt-6">
+                            {/* <div className="mt-6">
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Commentaire (optionnel)
                                 </label>
@@ -229,14 +229,14 @@ export default function NouvelleRequete() {
                                     <p className="mt-2 text-sm text-red-600">{errors.commentaire}</p>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Étape 3: Documents requis */}
                         {selectedType.documents && selectedType.documents.length > 0 && (
                             <div className="bg-white border border-gray-200 rounded-xl p-6">
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-lg font-semibold text-gray-900">
-                                        3. Documents requis
+                                        2. Documents requis
                                     </h2>
                                     <div className="text-sm text-gray-600">
                                         {Object.keys(uploadedFiles).length} / {selectedType.documents.length} documents fournis

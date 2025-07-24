@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role.staff' => \App\Http\Middleware\EnsureUserIsStaff::class,
             'role.admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+            'role.organisme' => \App\Http\Middleware\OrganismeTraitementMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -23,11 +23,14 @@ class DashboardController extends Controller
                 $dashboardData = $this->getEtudiantDashboard($user);
                 break;
             case 'secretaire':
-            case 'scolarite':
                 $dashboardData = $this->getStaffDashboard($user);
                 break;
             case 'directeur':
                 $dashboardData = $this->getDirecteurDashboard($user);
+                break;
+            case 'scolarite':
+            case 'cellule_infos':
+                $dashboardData = $this->getOrganismeDashboard($user);
                 break;
             case 'superAdmin':
                 $dashboardData = $this->getSuperAdminDashboard($user);
@@ -208,6 +211,87 @@ class DashboardController extends Controller
             'requetesAValider' => $requetesAValider,
             'performanceSecretaires' => $performanceSecretaires,
             'evolutionMensuelle' => $evolutionMensuelle,
+        ];
+    }
+
+    private function getOrganismeDashboard($user)
+    {
+        // Statistiques des requêtes assignées à cet organisme
+        $stats = [
+            'total_assignees' => Requete::where('organisme_responsable_id', $user->id)->count(),
+            'en_traitement' => Requete::where('organisme_responsable_id', $user->id)
+                ->where('statut', 'en_traitement_organisme')->count(),
+            'en_cours' => Requete::where('organisme_responsable_id', $user->id)
+                ->where('statut', 'en_cours_organisme')->count(),
+            'traitees' => Requete::where('organisme_responsable_id', $user->id)
+                ->where('statut', 'traitee_organisme')->count(),
+            'terminees' => Requete::where('organisme_responsable_id', $user->id)
+                ->where('statut', 'terminee')->count(),
+            'rejetees' => Requete::where('organisme_responsable_id', $user->id)
+                ->where('statut', 'rejetee_organisme')->count(),
+            'ce_mois' => Requete::where('organisme_responsable_id', $user->id)
+                ->whereNotNull('date_fin_traitement_organisme')
+                ->whereRaw("strftime('%m', date_fin_traitement_organisme) = ?", [sprintf('%02d', Carbon::now()->month)])
+                ->count(),
+        ];
+
+        // Requêtes prioritaires à traiter
+        $requetesPrioritaires = Requete::where('organisme_responsable_id', $user->id)
+            ->whereIn('statut', ['en_traitement_organisme', 'en_cours_organisme'])
+            ->whereIn('priorite', ['haute', 'urgente'])
+            ->with(['etudiant', 'typeRequete'])
+            ->orderByRaw("CASE priorite WHEN 'urgente' THEN 1 WHEN 'haute' THEN 2 WHEN 'normale' THEN 3 WHEN 'basse' THEN 4 ELSE 5 END")
+            ->orderBy('date_envoi_organisme', 'asc')
+            ->limit(5)
+            ->get();
+
+        // Requêtes récemment traitées
+        $requetesTraitees = Requete::where('organisme_responsable_id', $user->id)
+            ->whereIn('statut', ['traitee_organisme', 'terminee'])
+            ->with(['etudiant', 'typeRequete'])
+            ->orderBy('date_fin_traitement_organisme', 'desc')
+            ->limit(5)
+            ->get();
+
+        // Types de requêtes dont cet organisme est responsable
+        $typesResponsables = TypeRequete::where('organisme_responsable_id', $user->id)
+            ->withCount('requetes as total_requetes')
+            ->get()
+            ->filter(function($type) {
+                return $type->total_requetes > 0;
+            })
+            ->map(function($type) use ($user) {
+                $type->en_traitement = Requete::where('type_requete_id', $type->id)
+                    ->where('organisme_responsable_id', $user->id)
+                    ->whereIn('statut', ['en_traitement_organisme', 'en_cours_organisme'])
+                    ->count();
+                return $type;
+            })
+            ->sortByDesc('en_traitement')
+            ->take(5)
+            ->values();
+
+        // Performance mensuelle
+        $performanceMensuelle = Requete::where('organisme_responsable_id', $user->id)
+            ->select(
+                DB::raw("CAST(strftime('%m', date_fin_traitement_organisme) AS INTEGER) as mois"),
+                DB::raw('COUNT(*) as total'),
+                DB::raw('SUM(CASE WHEN statut = "terminee" THEN 1 ELSE 0 END) as terminees'),
+                DB::raw('SUM(CASE WHEN statut = "rejetee_organisme" THEN 1 ELSE 0 END) as rejetees')
+            )
+            ->whereNotNull('date_fin_traitement_organisme')
+            ->whereRaw("strftime('%Y', date_fin_traitement_organisme) = ?", [Carbon::now()->year])
+            ->groupBy('mois')
+            ->orderBy('mois')
+            ->get();
+
+        return [
+            'userRole' => $user->role,
+            'stats' => $stats,
+            'requetesPrioritaires' => $requetesPrioritaires,
+            'requetesTraitees' => $requetesTraitees,
+            'typesResponsables' => $typesResponsables,
+            'performanceMensuelle' => $performanceMensuelle,
         ];
     }
 

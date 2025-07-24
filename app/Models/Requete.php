@@ -20,10 +20,17 @@ class Requete extends Model
         'date_limite',
         'date_traitement',
         'date_approbation',
+        'date_debut_traitement_organisme',
+        'date_fin_traitement_organisme',
+        'date_finalisation',
         'motif_rejet',
         'motif_rejet_directeur',
+        'motif_rejet_organisme',
         'commentaire_secretaire',
         'commentaire_directeur',
+        'commentaire_organisme',
+        'document_resultat_path',
+        'document_resultat_nom',
         'etudiant_id',
         'type_requete_id',
         'secretaire_id',
@@ -37,6 +44,9 @@ class Requete extends Model
         'date_traitement' => 'datetime',
         'date_approbation' => 'datetime',
         'date_envoi_organisme' => 'datetime',
+        'date_debut_traitement_organisme' => 'datetime',
+        'date_fin_traitement_organisme' => 'datetime',
+        'date_finalisation' => 'datetime',
     ];
 
     public function etudiant(): BelongsTo

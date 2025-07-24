@@ -103,7 +103,7 @@ export default function Dashboard() {
                                     <p className="text-sm text-gray-600 mb-3">{type.description}</p>
                                     <div className="flex justify-between items-center text-xs text-gray-500">
                                         <span>{type.delai_traitement_jours} jour(s)</span>
-                                        <span>{type.requetes_count} requête(s)</span>
+                                        {/* <span>{type.requetes_count} requête(s)</span> */}
                                     </div>
                                 </div>
                             ))}
@@ -404,7 +404,7 @@ export default function Dashboard() {
     );
 
     return (
-        <Base title="Tableau de bord - GestReq" user={auth.user}>
+        <Base title="Tableau de bord" user={auth.user}>
             <div className="space-y-6">
                 {/* Welcome Section */}
                 <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
@@ -416,11 +416,11 @@ export default function Dashboard() {
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900">
-                                Bonjour, {auth.user?.nom} !
+                                Salut, {auth.user?.nom} !
                             </h1>
-                            <p className="text-green-700 capitalize">
+                            {/* <p className="text-green-700 capitalize">
                                 Connecté en tant que {auth.user?.role}
-                            </p>
+                            </p> */}
                         </div>
                     </div>
                 </div>
