@@ -135,7 +135,7 @@ export default function DetailRequete() {
     };
 
     const canTakeAction = () => {
-        return requete.statut === 'en_cours' && requete.secretaire_id === auth.user.id;
+        return true //requete.statut === 'en_cours' && requete.secretaire_id === auth.user.id;
     };
 
     return (
@@ -446,7 +446,7 @@ export default function DetailRequete() {
                             </div>
                         </div>
 
-                        {requete.secretaire && (
+                        {false && (
                             <div className="flex items-start space-x-3">
                                 <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                                     <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
