@@ -54,13 +54,15 @@ class DirecteurController extends Controller
             });
         }
 
-        $requetes = $query->orderByRaw("CASE priorite WHEN 'urgente' THEN 1 WHEN 'haute' THEN 2 WHEN 'normale' THEN 3 WHEN 'basse' THEN 4 ELSE 5 END")
-            ->orderBy('date_traitement', 'asc')
-            ->paginate(15);
+        // $requetes = $query->orderByRaw("CASE priorite WHEN 'urgente' THEN 1 WHEN 'haute' THEN 2 WHEN 'normale' THEN 3 WHEN 'basse' THEN 4 ELSE 5 END")
+        //     // ->orderBy('date_traitement', 'asc')
+        //     ->paginate(15);
+
+        $requetes = Requete::where('statut', 'en_cours')->with(['typeRequete', 'etudiant', 'requeteDocuments'])->orderBy('updated_at', 'asc')->paginate(10);
 
         // Statistiques pour les filtres
         $stats = [
-            'validees' => Requete::where('statut', 'validee')->count(),
+            'validees' => Requete::where('statut', 'en_cours')->count(),
             'approuvees' => Requete::where('statut', 'approuvee')->count(),
             'rejetees_directeur' => Requete::where('statut', 'rejetee_directeur')->count(),
             'en_traitement_organisme' => Requete::where('statut', 'en_traitement_organisme')->count(),
@@ -90,7 +92,7 @@ class DirecteurController extends Controller
             'typeRequete.organismeResponsable',
             'secretaire',
             'directeur',
-            'requeteDocuments.document.validateur'
+            'requeteDocuments.document'
         ]);
 
         return inertia('Directeur/DetailRequete', [
@@ -109,7 +111,7 @@ class DirecteurController extends Controller
         }
 
         // Vérifier que la requête est validée par le secrétaire
-        if ($requete->statut !== 'validee') {
+        if ($requete->statut !== 'en_cours') {
             return back()->with('error', 'Cette requête n\'est pas encore validée par le secrétaire.');
         }
 
@@ -145,7 +147,7 @@ class DirecteurController extends Controller
         }
 
         // Vérifier que la requête est validée
-        if ($requete->statut !== 'validee') {
+        if ($requete->statut !== 'en_cours') {
             return back()->with('error', 'Cette requête n\'est pas validée.');
         }
 

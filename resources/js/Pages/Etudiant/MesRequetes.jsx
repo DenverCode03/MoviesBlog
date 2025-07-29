@@ -205,21 +205,21 @@ export default function MesRequetes() {
                                             </h3>
                                             <div className="flex items-center space-x-3 text-sm text-gray-600">
                                                 <span>Créée le {new Date(requete.created_at).toLocaleDateString('fr-FR')}</span>
-                                                {requete.date_limite && (
+                                                {/* {requete.date_limite && (
                                                     <>
                                                         <span>•</span>
                                                         <span>Échéance: {new Date(requete.date_limite).toLocaleDateString('fr-FR')}</span>
                                                     </>
-                                                )}
+                                                )} */}
                                             </div>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatutColor(requete.statut)}`}>
                                                 {getStatutLabel(requete.statut)}
                                             </span>
-                                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPrioriteColor(requete.priorite)}`}>
+                                            {/* <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPrioriteColor(requete.priorite)}`}>
                                                 {requete.priorite}
-                                            </span>
+                                            </span> */}
                                         </div>
                                     </div>
 
@@ -227,10 +227,10 @@ export default function MesRequetes() {
                                     {(requete.secretaire || requete.directeur) && (
                                         <div className="text-sm text-gray-600 mb-3">
                                             {requete.secretaire && (
-                                                <span>Traité par: {requete.secretaire.nom}</span>
+                                                <span>Contenu accepté par : <strong>{requete.secretaire.nom}</strong></span>
                                             )}
                                             {requete.directeur && (
-                                                <span className="ml-4">Validé par: {requete.directeur.nom}</span>
+                                                <span className="ml-4">Validé par: <strong>{requete.directeur.nom}</strong></span>
                                             )}
                                         </div>
                                     )}

@@ -227,9 +227,9 @@ export default function Users() {
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                         Date de création
                                     </th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    {/* <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                         Statut
-                                    </th>
+                                    </th> */}
                                     <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                         Actions
                                     </th>
@@ -272,7 +272,7 @@ export default function Users() {
                                                     day: 'numeric'
                                                 })}
                                             </td>
-                                            <td className="px-6 py-4">
+                                            {/* <td className="px-6 py-4">
                                                 <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                                     user.email_verified_at 
                                                         ? 'bg-green-100 text-green-800' 
@@ -280,10 +280,10 @@ export default function Users() {
                                                 }`}>
                                                     {user.email_verified_at ? 'Vérifié' : 'En attente'}
                                                 </span>
-                                            </td>
+                                            </td> */}
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end space-x-2">
-                                                    <button
+                                                    {/* <button
                                                         onClick={() => handleResetPassword(user)}
                                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                         title="Réinitialiser le mot de passe"
@@ -292,7 +292,7 @@ export default function Users() {
                                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m0 0a2 2 0 01-2 2m2-2h3m-3 0h-3m-2-5a2 2 0 00-2 2v6a2 2 0 002 2h2M7 7a2 2 0 012-2h2m0 0h2m0 0h2a2 2 0 012 2m0 0v2m0 0v2m0 0a2 2 0 01-2 2" />
                                                         </svg>
-                                                    </button>
+                                                    </button> */}
 
                                                     <button
                                                         onClick={() => openEditModal(user)}

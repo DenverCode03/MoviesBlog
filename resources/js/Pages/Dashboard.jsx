@@ -407,7 +407,7 @@ export default function Dashboard() {
         <Base title="Tableau de bord" user={auth.user}>
             <div className="space-y-6">
                 {/* Welcome Section */}
-                <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                {/* <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
                     <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
                             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -418,12 +418,12 @@ export default function Dashboard() {
                             <h1 className="text-2xl font-bold text-gray-900">
                                 Salut, {auth.user?.nom} !
                             </h1>
-                            {/* <p className="text-green-700 capitalize">
+                            <p className="text-green-700 capitalize">
                                 Connecté en tant que {auth.user?.role}
-                            </p> */}
+                            </p>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Success Message */}
                 {success && (

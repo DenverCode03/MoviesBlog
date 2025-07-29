@@ -251,7 +251,7 @@ export default function DetailRequete() {
                         </div>
                         
                         <div className="flex items-center space-x-3">
-                            {requete.statut === 'en_attente' && (
+                            {/* {requete.statut === 'en_attente' && (
                                 <button
                                     onClick={handlePrendreEnCharge}
                                     className="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center space-x-2"
@@ -261,7 +261,7 @@ export default function DetailRequete() {
                                     </svg>
                                     <span>Prendre en charge</span>
                                 </button>
-                            )}
+                            )} */}
 
                             {canTakeAction() && (
                                 <>

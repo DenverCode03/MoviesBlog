@@ -40,7 +40,7 @@ export default function Base({ children, title = "MyStudentRequest", user }) {
                 ...baseItems,
                 {
                     name: "Mes requêtes",
-                    href: "etudiant/mes-requetes",
+                    href: "/etudiant/mes-requetes",
                     icon: (
                         <svg
                             className="w-5 h-5"
@@ -59,7 +59,7 @@ export default function Base({ children, title = "MyStudentRequest", user }) {
                 },
                 {
                     name: "Nouvelle requête",
-                    href: "etudiant/requetes/create",
+                    href: "/etudiant/requetes/create",
                     icon: (
                         <svg
                             className="w-5 h-5"
@@ -520,7 +520,27 @@ export default function Base({ children, title = "MyStudentRequest", user }) {
                             <div className="p-6 border-t border-gray-200">
                                 <div className="flex items-center space-x-3 text-sm text-gray-600">
                                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                    <span>Système opérationnel</span>
+                                    {/* Logout */}
+                                    <Link
+                                        href="/logout"
+                                        method="post"
+                                        className="p-2 rounded-lg flex gap-2 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                        title="Se déconnecter"
+                                    >
+                                        <svg
+                                            className="w-6 h-6"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                                            />
+                                        </svg> <span className="relative top-[1px]">Me déconnecter</span>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

@@ -80,7 +80,7 @@ class OrganismeTraitementController extends Controller
             ->orderBy('nom')
             ->get();
         
-        return inertia('Orgtraitement/Traitement', [
+        return inertia('OrgTraitement/Traitement', [
             'requetes' => $requetes,
             'stats' => $stats,
             'typesRequetes' => $typesRequetes,
@@ -108,7 +108,7 @@ class OrganismeTraitementController extends Controller
             'requeteDocuments.document.validateur'
         ]);
         
-        return inertia('Orgtraitement/DetailRequete', [
+        return inertia('OrgTraitement/DetailRequete', [
             'requete' => $requete
         ]);
     }

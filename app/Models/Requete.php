@@ -49,6 +49,8 @@ class Requete extends Model
         'date_finalisation' => 'datetime',
     ];
 
+    protected $with = ['organismeResponsable', 'requeteDocuments', 'directeur', 'secretaire'];
+
     public function etudiant(): BelongsTo
     {
         return $this->belongsTo(User::class, 'etudiant_id');
